@@ -1,0 +1,33 @@
+# Auto Claude data directory
+.auto-claude/
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment variables
+.env
+
+# Test coverage
+coverage/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Auto-claude session files
+.auto-claude-security.json
+.auto-claude-status
+.claude_settings.json
