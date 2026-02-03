@@ -22,6 +22,7 @@
     "format:check": "prettier --check \"src/**/*.ts\"",
     "typecheck": "tsc --noEmit",
     "inspect": "npx @modelcontextprotocol/inspector node dist/index.js",
+    "verify:claude-desktop": "bash scripts/verify-claude-desktop.sh",
     "clean": "rm -rf dist coverage",
     "prepublishOnly": "npm run build"
   },
