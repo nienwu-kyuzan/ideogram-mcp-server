@@ -205,6 +205,7 @@ export const logger: Logger = pino(createLoggerOptions());
  * Ensures consistent naming across the application.
  */
 export type LoggerComponent =
+  | 'entry'
   | 'server'
   | 'ideogram-client'
   | 'tool:generate'
