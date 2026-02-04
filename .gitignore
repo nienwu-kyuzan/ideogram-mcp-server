@@ -31,3 +31,8 @@ logs/
 .auto-claude-security.json
 .auto-claude-status
 .claude_settings.json
+
+# Auto Claude generated files
+.worktrees/
+.security-key
+logs/security/
