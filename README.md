@@ -5,6 +5,10 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+> **⚠️ Disclaimer**: This is an **unofficial**, community-driven project and is **not affiliated with, endorsed by, or sponsored by Ideogram AI**. For official Ideogram resources, please visit [ideogram.ai](https://ideogram.ai).
+
+> **🤖 AI-Generated Project**: This project was **entirely implemented by an AI agent** (Claude) using the auto-claude autonomous development system. The codebase, tests, and documentation were all generated through AI-assisted development. Human oversight was provided for requirements and review.
+
 A production-grade **Model Context Protocol (MCP) server** that provides seamless integration between LLM applications (Claude Desktop, Cursor, VS Code) and the [Ideogram AI](https://ideogram.ai) image generation API.
 
 ## ✨ Features
@@ -239,7 +243,14 @@ ideogram-mcp-server/
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please:
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on:
+
+- Development setup
+- Coding standards
+- Testing requirements
+- Pull request process
+
+**Quick start:**
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
