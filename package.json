@@ -1,10 +1,13 @@
 {
   "name": "@takeshijuan/ideogram-mcp-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Production-grade Ideogram MCP server for AI image generation integration with Claude Desktop, Cursor, and VS Code",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "ideogram-mcp-server": "dist/index.js"
+  },
   "engines": {
     "node": ">=18.0.0"
   },
