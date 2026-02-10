@@ -1,12 +1,12 @@
 name: Release and Publish
 
-# mainブランチへのpush/merge時にトリガー
+# Trigger on push/merge to main branch
 on:
   push:
     branches:
       - main
 
-# 同時実行制御（複数のmergeが連続した場合、最新のみ実行）
+# Concurrency control (process sequentially if multiple merges occur)
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
@@ -14,73 +14,74 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
-    # semantic-releaseとnpm publish、GitHub Release作成に必要な権限
-    # 注意: Branch Protectionが有効な場合、GITHUB_TOKENでは制限される場合があります
-    # その場合は、Personal Access Token (PAT) を secrets.PAT として設定し、
-    # checkout ステップに token: ${{ secrets.PAT }} を追加してください
+    # Permissions required for semantic-release, npm publish, and GitHub Release creation
+    # Note: If Branch Protection is enabled, GITHUB_TOKEN may have restrictions
+    # In that case, set a Personal Access Token (PAT) as secrets.PAT and
+    # add token: ${{ secrets.PAT }} to the checkout step
     permissions:
-      contents: write      # リポジトリへのコミット、タグ作成、Release作成
-      id-token: write      # npm provenance用
+      contents: write      # For git commits, tag creation, and Release creation
+      id-token: write      # For npm provenance
 
     steps:
-      # 1. リポジトリのチェックアウト
+      # 1. Checkout repository
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # 全履歴を取得（semantic-release用）
-          # persist-credentials: true がデフォルト（GITHUB_TOKEN使用）
-          # Branch Protection使用時はPATが必要: token: ${{ secrets.PAT }}
+          fetch-depth: 0 # Fetch all history (required for semantic-release)
+          # persist-credentials: true is default (uses GITHUB_TOKEN)
+          # For Branch Protection, use PAT: token: ${{ secrets.PAT }}
 
-      # 2. Node.js環境のセットアップ
+      # 2. Setup Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # LTS最新版（Node.js 18は2025年4月でEOL）
+          node-version: '20' # Latest LTS (Node.js 18 reached EOL in April 2025)
           registry-url: 'https://registry.npmjs.org'
           cache: 'npm'
 
-      # 3. 依存関係のインストール
+      # 3. Install dependencies
       - name: Install dependencies
         run: npm ci
 
-      # 4. セキュリティ監査（moderate以上の脆弱性をチェック）
-      # 注意: npmレジストリの一時的な障害でリリースがブロックされないよう、
-      # 失敗しても継続します。重大な脆弱性は別途Dependabotで検出されます。
+      # 4. Security audit (check for moderate+ severity vulnerabilities)
+      # Note: Continues even on failure to avoid blocking releases due to
+      # temporary npm registry outages. Critical vulnerabilities are also
+      # detected by Dependabot.
       - name: Security audit
         run: npm audit --audit-level=moderate
         continue-on-error: true
 
-      # 5. 型チェック
+      # 5. Type check
       - name: Type check
         run: npm run typecheck
 
-      # 6. Lint チェック
-      # 注意: 既存コードに起因するlintエラーがあるため、一時的に警告扱いとする
-      # TODO: 既存のlintエラーを修正後、continue-on-errorをfalseに変更
+      # 6. Lint check
+      # Note: Temporarily treating as warning due to existing code lint errors
+      # TODO: Fix existing lint errors and change continue-on-error to false
       - name: Lint
         run: npm run lint
         continue-on-error: true
 
-      # 7. フォーマットチェック
+      # 7. Format check
       - name: Format check
         run: npm run format:check
 
-      # 8. テスト実行
-      # 注意: 既存コードに起因するテスト失敗があるため、一時的に警告扱いとする
-      # TODO: 既存のテスト失敗を修正後、continue-on-errorをfalseに変更
+      # 8. Run tests
+      # Note: Temporarily treating as warning due to existing code test failures
+      # TODO: Fix existing test failures and change continue-on-error to false
       - name: Run tests
         run: npm run test:run
         continue-on-error: true
 
-      # 9. ビルド
+      # 9. Build
       - name: Build
         run: npm run build
 
-      # 10. 型定義生成
+      # 10. Build type definitions
       - name: Build type definitions
         run: npm run build:types
 
-      # 11. ビルド成果物の検証
+      # 11. Verify build artifacts
       - name: Verify build artifacts
         run: |
           if [ ! -f "dist/index.js" ]; then
@@ -93,7 +94,7 @@ jobs:
           fi
           echo "✅ Build artifacts verified"
 
-      # 12. semantic-releaseによる自動リリース
+      # 12. Automatic release with semantic-release
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -101,7 +102,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
 
-      # 13. 成功通知
+      # 13. Success notification
       - name: Release success
         if: success()
         run: |
